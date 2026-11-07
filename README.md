@@ -15,4 +15,4 @@ npx skills add UmmItKin/SOC-My-PC
 | Claude Code | `/soc-me` (later, `/soc-me recheck`) |
 | Codex | `$soc-me` |
 
-The collector also works on its own: `sh scripts/collect.sh [DAYS]`.
+The collector also works on its own: `sh skills/soc-me/scripts/collect.sh [DAYS]`.
