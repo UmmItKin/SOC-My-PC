@@ -43,7 +43,7 @@ ps -eo pid,ppid,stat,etime,comm | awk 'NR==1 || $3 ~ /Z/'
 
 sec orphans-long-running
 # reparented to init, human user (uid>=1000), up >1h: often forgotten dev servers/browsers
-ps -eo pid,ppid,uid,user,etimes,etime,args | awk 'NR==1 || ($2==1 && $3>=1000 && $5>3600)' | cut -c1-200
+ps -eo pid,ppid,uid,user,etimes,etime,args | awk 'NR==1 || ($2==1 && $3>=1000 && $3<65534 && $5>3600)' | cut -c1-200
 
 sec listeners
 if have ss; then ss -tulpnH; elif have netstat; then netstat -tulpn 2>/dev/null; else echo "(no ss/netstat)"; fi
