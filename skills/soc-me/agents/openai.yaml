@@ -1,5 +1,5 @@
 interface:
   display_name: "SOC Me"
-  short_description: "Read-only SOC triage of this Linux host"
+  short_description: "Read-only SOC triage of this Linux or Windows machine"
 policy:
   allow_implicit_invocation: false

@@ -22,4 +22,9 @@ rm -f "$t"
 t=$(mktemp); python3 "$d/report.py" -o "$t" < "$d/../references/example.json" >/dev/null \
   && cmp -s "$t" "$d/../references/example.html" || { echo "FAIL: references/example.html is stale; re-render it from example.json"; rm -f "$t"; exit 1; }
 rm -f "$t"
+# Windows collector: parse check only (it needs Windows to run for real). Skipped without pwsh.
+if command -v pwsh >/dev/null 2>&1; then
+  pwsh -NoProfile -Command "\$e=\$null; [void][System.Management.Automation.Language.Parser]::ParseFile('$d/collect.ps1',[ref]\$null,[ref]\$e); if (\$e) { \$e | ForEach-Object { \$_.ToString() }; exit 1 }" \
+    || { echo "FAIL: collect.ps1 does not parse"; exit 1; }
+else echo "skip: collect.ps1 parse check (no pwsh)"; fi
 echo PASS
