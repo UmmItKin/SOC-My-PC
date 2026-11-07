@@ -1,6 +1,7 @@
 ---
-name: linux-soc-triage
-description: Read-only SOC triage of a live Linux host (any distro). Collects processes, network sockets, persistence, accounts and unowned binaries, then reports suspicious processes, odd-but-legit ones, and junk processes that can be cleaned. Use when the user asks to "SOC check / analyse my system", "any weird/suspicious processes", "is my PC compromised", "what processes can I kill/clean", "re-check", or in Chinese "奇怪的 process", "有沒有中毒", "檢查系統", "有什麼垃圾 process 可以清", "再 check 一次".
+name: soc-me
+description: Read-only SOC triage of a live Linux host (any distro). Collects processes, network sockets, persistence, accounts and unowned binaries, then reports suspicious processes, odd-but-legit ones, and junk processes that can be cleaned. Explicit invocation only (/soc-me in Claude Code, $soc-me in Codex); pass "recheck" to diff against the last report.
+disable-model-invocation: true
 ---
 
 # Linux SOC triage
@@ -15,7 +16,7 @@ description: Read-only SOC triage of a live Linux host (any distro). Collects pr
 1. Run `sh <skill-dir>/scripts/collect.sh [DAYS]`. DAYS is the window for "recently modified" (default 7). It takes about 30 s.
 2. For anything that stands out, check `/proc/<pid>/cwd`, the parent process (`ps -o pid,ppid,etime,args -p`), and the package that owns the binary.
 3. Classify each finding into a report bucket (below).
-4. **Re-check** ("再 check"): rerun the collector. Report only what changed since the last report: what is gone, what is new, and what is still there.
+4. **Re-check** (`recheck` arg, or "再 check"): rerun the collector. Report only what changed since the last report: what is gone, what is new, and what is still there.
 
 ## What is suspicious (red flags)
 | Signal | Collector section |
