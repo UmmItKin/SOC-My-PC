@@ -18,4 +18,8 @@ ok = len(scripts) == 1 and csp == "sha256-" + base64.b64encode(hashlib.sha256(sc
 sys.exit(0 if ok else print("FAIL: script count or CSP hash mismatch") or 1)
 PY
 rm -f "$t"
+# The committed example must match what the renderer produces now.
+t=$(mktemp); python3 "$d/report.py" -o "$t" < "$d/../references/example.json" >/dev/null \
+  && cmp -s "$t" "$d/../references/example.html" || { echo "FAIL: references/example.html is stale; re-render it from example.json"; rm -f "$t"; exit 1; }
+rm -f "$t"
 echo PASS

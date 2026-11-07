@@ -1,0 +1,124 @@
+{
+ "lang": "en",
+ "title": "SOC triage: workstation",
+ "verdict": "compromised",
+ "summary": "A crypto miner disguised as a kernel worker runs from /tmp and restarts from a user systemd unit. Disconnect from the network and save the evidence before you clean anything.",
+ "meta": {
+  "time": "2026-11-07 21:40",
+  "host": "workstation",
+  "kernel": "6.12.8",
+  "uptime": "4d 6h",
+  "uid": "1000 (no sudo)"
+ },
+ "panels": [
+  {
+   "title": "Suspicious",
+   "tone": "err",
+   "note": "Investigate first. Do not kill yet: you would lose the evidence.",
+   "cols": [
+    "PID",
+    "Severity",
+    "ATT&CK",
+    "Evidence",
+    "Next step"
+   ],
+   "rows": [
+    [
+     "4242",
+     "crit",
+     "`T1496` `T1036.005`",
+     "Named `kworkerd` to look like a kernel thread, but has an executable: `/tmp/.x/kworkerd (deleted)`. Uses 380% CPU and holds a connection to 203.0.113.7:3333, a common mining pool port.",
+     "`ls -l /proc/4242/exe`"
+    ],
+    [
+     "unit",
+     "high",
+     "`T1543.002`",
+     "`~/.config/systemd/user/kworkerd.service` was created 2 days ago and starts the same binary at login.",
+     "`systemctl --user cat kworkerd`"
+    ]
+   ]
+  },
+  {
+   "title": "Junk to clean",
+   "note": "Safe to stop. You run the commands.",
+   "copy": [
+    "kill 31337",
+    "kill 41001"
+   ],
+   "cols": [
+    "Target",
+    "Cost",
+    "Command"
+   ],
+   "rows": [
+    [
+     "vite dev server",
+     "1.2 GB, idle for 3 days",
+     "`kill 31337`"
+    ],
+    [
+     "headless Chromium from an old test run",
+     "9 processes, 2.1 GB",
+     "`kill 41001`"
+    ],
+    [
+     "apt upgrade",
+     "running now",
+     "no do not kill"
+    ]
+   ]
+  },
+  {
+   "title": "Odd but yours",
+   "tone": "warn",
+   "note": "Not a threat. Confirm you started these.",
+   "cols": [
+    "PID",
+    "Severity",
+    "What",
+    "Why it stands out"
+   ],
+   "rows": [
+    [
+     "5037",
+     "low",
+     "adb server",
+     "Has been listening on 127.0.0.1:5037 for 2 days. Stop it with `adb kill-server` if you are done with your phone."
+    ],
+    [
+     "kernel",
+     "info",
+     "tainted=4096",
+     "An out-of-tree module is loaded: the NVIDIA driver. Expected on this machine."
+    ]
+   ]
+  },
+  {
+   "title": "Hardening",
+   "note": "Changes settings. Your call.",
+   "cards": [
+    {
+     "title": "low LLMNR (local-network name lookup)",
+     "body": "When DNS cannot find a name, systemd-resolved asks the whole local network and answers others on port 5355. Anyone on the same Wi-Fi can answer first and send you to a fake host. You almost never need it. To undo, delete no-llmnr.conf and restart systemd-resolved.",
+     "cmd": [
+      "sudo mkdir -p /etc/systemd/resolved.conf.d",
+      "printf '[Resolve]\\nLLMNR=no\\n' | sudo tee /etc/systemd/resolved.conf.d/no-llmnr.conf",
+      "sudo systemctl restart systemd-resolved"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Checks passed",
+   "tone": "ok",
+   "items": [
+    "ok No /etc/ld.so.preload and no LD_PRELOAD outside the browser sandbox",
+    "ok Only root has uid 0",
+    "ok No authorized_keys changed in the last 7 days",
+    "ok No new SUID or SGID files in the last 7 days",
+    "ok Every recently changed binary belongs to a package"
+   ]
+  }
+ ]
+}

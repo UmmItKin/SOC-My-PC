@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-g8HjCB3b+0AYZnHZ4AcOVzxOjooUjhxXSuZ9wBfmlQg='"><title>SOC triage: workstation</title><style>
+:root{color-scheme:light dark;--bg:#f5f2ea;--paper:#fdfbf6;--ink:#1f1c17;--ink2:#57514a;--line:#e5dfd3;--fline:#cbc3b4;
+--fill:#f3eee4;--ok:#2e6a3b;--ok-bg:#e4efe5;--warn:#7f5300;--warn-bg:#f6ecd6;--err:#a3251b;--err-bg:#f7e3e0;
+--chip:#1f1c17;--chip-fg:#fdfbf6;--focus:#8c2f1e}
+@media (prefers-color-scheme:dark){:root{--bg:#15130f;--paper:#1c1a15;--ink:#ebe5d8;--ink2:#b5ad9e;--line:#2d2a24;
+--fline:#4a443a;--fill:#242119;--ok:#8cc79a;--ok-bg:#1c3122;--warn:#e3b866;--warn-bg:#352a13;--err:#f0928a;--err-bg:#3a1d1a;
+--chip:#ebe5d8;--chip-fg:#15130f;--focus:#e59a7d}}
+*{box-sizing:border-box}html{background:var(--bg)}
+body{margin:0;color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI","Noto Sans TC","Noto Sans CJK TC","PingFang TC",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:980px;margin:0 auto;padding:40px 24px 56px;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-direction:column;gap:16px}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+h1{margin:0;font:600 30px/1.25 "Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Noto Serif CJK TC","Songti TC",serif}
+.meta{margin:6px 0 0;display:flex;flex-wrap:wrap;gap:2px 16px;font-size:14px;color:var(--ink2)}
+.meta b{font:500 14px ui-monospace,SFMono-Regular,"JetBrains Mono",Menlo,Consolas,monospace;color:var(--ink)}
+.verdict{display:flex;gap:16px;align-items:flex-start;border:1px solid var(--fline);border-radius:2px;padding:20px 22px;background:var(--fill)}
+.verdict.ok{background:var(--ok-bg);border-color:color-mix(in srgb,var(--ok) 35%,var(--fline))}
+.verdict.warn{background:var(--warn-bg);border-color:color-mix(in srgb,var(--warn) 35%,var(--fline))}
+.verdict.err{background:var(--err-bg);border-color:color-mix(in srgb,var(--err) 35%,var(--fline))}
+.verdict .b{width:40px;height:40px;font-size:22px;margin:2px 0 0}
+.verdict strong{display:block;font:600 15px system-ui,-apple-system,"Segoe UI","Noto Sans TC","Noto Sans CJK TC","PingFang TC",Roboto,sans-serif}
+.verdict.ok strong{color:var(--ok)}.verdict.warn strong{color:var(--warn)}.verdict.err strong{color:var(--err)}
+.lead{margin:4px 0 0;font:22px/1.5 "Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Noto Serif CJK TC","Songti TC",serif}
+section{background:var(--paper);border:1px solid var(--fline);border-radius:2px;overflow:hidden}
+.ph{display:flex;align-items:center;gap:12px;padding:14px 18px}
+section>.ph{border-bottom:1px solid var(--fline)}
+.n{display:grid;place-items:center;flex:none;min-width:28px;height:28px;padding:0 6px;border-radius:2px;background:var(--chip);color:var(--chip-fg);
+font:600 14px ui-monospace,SFMono-Regular,"JetBrains Mono",Menlo,Consolas,monospace}
+.n.err{background:var(--err)}.n.warn{background:var(--warn)}.n.ok{background:var(--ok)}
+h2{margin:0;font:600 20px/1.3 "Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Noto Serif CJK TC","Songti TC",serif}
+.note{flex:1;font-size:14px;color:var(--ink2)}
+table{width:100%;font-size:15px;border-spacing:0}
+th{text-align:left;font-size:13px;font-weight:600;color:var(--ink2);padding:9px 18px;border-bottom:1px solid var(--line);background:var(--fill)}
+td{padding:12px 18px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:break-word}
+tbody tr:last-child td{border-bottom:0}td:first-child{font-weight:500}
+ul{margin:0;padding:0;list-style:none}
+ul li{padding:11px 18px;border-bottom:1px solid var(--line)}ul li:last-child{border-bottom:0}
+.mark{display:inline-block;width:18px;font:700 16px ui-monospace,SFMono-Regular,"JetBrains Mono",Menlo,Consolas,monospace}.add .mark{color:var(--err)}.del .mark{color:var(--ok)}.same .mark{color:var(--warn)}
+code{font:14px ui-monospace,SFMono-Regular,"JetBrains Mono",Menlo,Consolas,monospace;background:var(--fill);border:1px solid var(--line);border-radius:2px;padding:2px 6px;
+user-select:all;-webkit-user-select:all;cursor:copy;-webkit-box-decoration-break:clone;box-decoration-break:clone;line-height:1.9}
+.b,.sev{display:inline-grid;place-items:center;height:24px;font:700 12px ui-monospace,SFMono-Regular,"JetBrains Mono",Menlo,Consolas,monospace;border-radius:2px;
+margin-right:3px;vertical-align:-5px;border:1px solid}
+.b{min-width:24px;padding:0 4px;font-size:13px}.sev{padding:0 7px;letter-spacing:.04em}
+.b.ok{color:var(--ok);background:var(--ok-bg);border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
+.b.no,.sev.crit{color:var(--err);background:var(--err-bg);border-color:color-mix(in srgb,var(--err) 40%,transparent)}
+.b.warn,.sev.high,.sev.med{color:var(--warn);background:var(--warn-bg);border-color:color-mix(in srgb,var(--warn) 40%,transparent)}
+.sev.low,.sev.info{color:var(--ink2);background:var(--fill);border-color:var(--fline)}
+.fx{padding:18px}.fx+.fx{border-top:1px solid var(--line)}
+.fx h3{margin:0;font-size:17px;font-weight:600}.fx h3 .sev{vertical-align:2px}.fx p{margin:6px 0 12px;max-width:46em}
+.term{position:relative;background:var(--fill);border:1px solid var(--line);border-radius:2px}
+.term pre{margin:0;padding:14px 96px 14px 16px;font:14px/1.75 ui-monospace,SFMono-Regular,"JetBrains Mono",Menlo,Consolas,monospace;white-space:pre;overflow-x:auto;
+user-select:all;-webkit-user-select:all}
+.term .copy{position:absolute;top:8px;right:8px}
+.copy{flex:none;font:600 13px system-ui,-apple-system,"Segoe UI","Noto Sans TC","Noto Sans CJK TC","PingFang TC",Roboto,sans-serif;color:var(--chip-fg);background:var(--chip);border:0;border-radius:2px;padding:6px 12px;
+cursor:pointer;min-height:32px}
+.copy:hover{opacity:.88}
+@media (max-width:640px){main{padding:24px 14px 40px}h1{font-size:24px}.lead{font-size:19px}.ph{flex-wrap:wrap}
+.note{flex-basis:100%;order:3}
+table,thead,tbody,tr,td{display:block}thead{display:none}tr{border-bottom:1px solid var(--line);padding:6px 0}tbody tr:last-child{border-bottom:0}
+td{border:0;padding:4px 18px}td[data-col]:not(:first-child):before{content:attr(data-col);display:block;font-size:13px;color:var(--ink2)}
+.term pre{padding-right:16px;padding-top:52px}}
+@media print{@page{size:13.333in 7.5in;margin:.35in}html,body{background:#fff}main{max-width:none;padding:0;display:block;zoom:1.35}
+header{break-after:page}section{break-before:page;border:0}code{cursor:auto}.copy{display:none}.term pre{padding:14px 16px;white-space:pre-wrap}}
+</style><noscript><style>.copy{display:none}</style></noscript></head><body><main><header><div><h1>SOC triage: workstation</h1><p class="meta"><span><b>2026-11-07 21:40</b></span><span>host <b>workstation</b></span><span>kernel <b>6.12.8</b></span><span>uptime <b>4d 6h</b></span><span>uid <b>1000 (no sudo)</b></span></p></div><div class="verdict err"><span class="b no" aria-hidden="true">✗</span><div><strong>Compromised</strong><p class="lead">A crypto miner disguised as a kernel worker runs from /tmp and restarts from a user systemd unit. Disconnect from the network and save the evidence before you clean anything.</p></div></div></header><section aria-labelledby="h0"><div class="ph"><span class="n err" aria-hidden="true">2</span><h2 id="h0">Suspicious</h2><span class="note">Investigate first. Do not kill yet: you would lose the evidence.</span></div><table><thead><tr><th scope="col">PID</th><th scope="col">Severity</th><th scope="col">ATT&amp;CK</th><th scope="col">Evidence</th><th scope="col">Next step</th></tr></thead><tbody><tr><td data-col="PID">4242</td><td data-col="Severity"><span class="sev crit">CRIT</span> </td><td data-col="ATT&amp;CK"><code>T1496</code> <code>T1036.005</code></td><td data-col="Evidence">Named <code>kworkerd</code> to look like a kernel thread, but has an executable: <code>/tmp/.x/kworkerd (deleted)</code>. Uses 380% CPU and holds a connection to 203.0.113.7:3333, a common mining pool port.</td><td data-col="Next step"><code>ls -l /proc/4242/exe</code></td></tr><tr><td data-col="PID">unit</td><td data-col="Severity"><span class="sev high">HIGH</span> </td><td data-col="ATT&amp;CK"><code>T1543.002</code></td><td data-col="Evidence"><code>~/.config/systemd/user/kworkerd.service</code> was created 2 days ago and starts the same binary at login.</td><td data-col="Next step"><code>systemctl --user cat kworkerd</code></td></tr></tbody></table></section><section aria-labelledby="h1"><div class="ph"><span class="n " aria-hidden="true">3</span><h2 id="h1">Junk to clean</h2><span class="note">Safe to stop. You run the commands.</span><button type="button" class="copy" data-copy="all1" data-label="Copy all commands" data-done="Copied" aria-live="polite">Copy all commands</button><pre id="all1" hidden>kill 31337
+kill 41001</pre></div><table><thead><tr><th scope="col">Target</th><th scope="col">Cost</th><th scope="col">Command</th></tr></thead><tbody><tr><td data-col="Target">vite dev server</td><td data-col="Cost">1.2 GB, idle for 3 days</td><td data-col="Command"><code>kill 31337</code></td></tr><tr><td data-col="Target">headless Chromium from an old test run</td><td data-col="Cost">9 processes, 2.1 GB</td><td data-col="Command"><code>kill 41001</code></td></tr><tr><td data-col="Target">apt upgrade</td><td data-col="Cost">running now</td><td data-col="Command"><span class="b no" aria-label="no">✗</span> do not kill</td></tr></tbody></table></section><section aria-labelledby="h2"><div class="ph"><span class="n warn" aria-hidden="true">2</span><h2 id="h2">Odd but yours</h2><span class="note">Not a threat. Confirm you started these.</span></div><table><thead><tr><th scope="col">PID</th><th scope="col">Severity</th><th scope="col">What</th><th scope="col">Why it stands out</th></tr></thead><tbody><tr><td data-col="PID">5037</td><td data-col="Severity"><span class="sev low">LOW</span> </td><td data-col="What">adb server</td><td data-col="Why it stands out">Has been listening on 127.0.0.1:5037 for 2 days. Stop it with <code>adb kill-server</code> if you are done with your phone.</td></tr><tr><td data-col="PID">kernel</td><td data-col="Severity"><span class="sev info">INFO</span> </td><td data-col="What">tainted=4096</td><td data-col="Why it stands out">An out-of-tree module is loaded: the NVIDIA driver. Expected on this machine.</td></tr></tbody></table></section><section aria-labelledby="h3"><div class="ph"><span class="n " aria-hidden="true">1</span><h2 id="h3">Hardening</h2><span class="note">Changes settings. Your call.</span></div><div class="fx"><h3><span class="sev low">LOW</span> LLMNR (local-network name lookup)</h3><p>When DNS cannot find a name, systemd-resolved asks the whole local network and answers others on port 5355. Anyone on the same Wi-Fi can answer first and send you to a fake host. You almost never need it. To undo, delete no-llmnr.conf and restart systemd-resolved.</p><div class="term"><pre id="c3-0">sudo mkdir -p /etc/systemd/resolved.conf.d
+printf &#x27;[Resolve]\nLLMNR=no\n&#x27; | sudo tee /etc/systemd/resolved.conf.d/no-llmnr.conf
+sudo systemctl restart systemd-resolved</pre><button type="button" class="copy" data-copy="c3-0" data-label="Copy" data-done="Copied" aria-live="polite">Copy</button></div></div></section><section aria-labelledby="h4"><div class="ph"><span class="n ok" aria-hidden="true">5</span><h2 id="h4">Checks passed</h2><span class="note"></span></div><ul><li><span class="b ok" aria-label="ok">✓</span> No /etc/ld.so.preload and no LD_PRELOAD outside the browser sandbox</li><li><span class="b ok" aria-label="ok">✓</span> Only root has uid 0</li><li><span class="b ok" aria-label="ok">✓</span> No authorized_keys changed in the last 7 days</li><li><span class="b ok" aria-label="ok">✓</span> No new SUID or SGID files in the last 7 days</li><li><span class="b ok" aria-label="ok">✓</span> Every recently changed binary belongs to a package</li></ul></section></main><script>document.addEventListener('click',function(ev){var b=ev.target.closest('[data-copy]');if(!b)return;var el=document.getElementById(b.dataset.copy),t=el.textContent;function done(){b.textContent=b.dataset.done;setTimeout(function(){b.textContent=b.dataset.label},1500)}function sel(){var r=document.createRange();r.selectNodeContents(el);var x=getSelection();x.removeAllRanges();x.addRange(r);try{document.execCommand('copy');done()}catch(e){}}if(navigator.clipboard){navigator.clipboard.writeText(t).then(done,sel)}else{sel()}});</script></body></html>

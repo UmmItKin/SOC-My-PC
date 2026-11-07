@@ -67,7 +67,7 @@ h2{margin:0;font:600 20px/1.3 """ + SERIF + """}
 table{width:100%;font-size:15px;border-spacing:0}
 th{text-align:left;font-size:13px;font-weight:600;color:var(--ink2);padding:9px 18px;border-bottom:1px solid var(--line);background:var(--fill)}
 td{padding:12px 18px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:break-word}
-tbody tr:last-child td{border-bottom:0}td:first-child{font-weight:500}td code{white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}td:first-child{font-weight:500}
 ul{margin:0;padding:0;list-style:none}
 ul li{padding:11px 18px;border-bottom:1px solid var(--line)}ul li:last-child{border-bottom:0}
 .mark{display:inline-block;width:18px;font:700 16px """ + MONO + """}.add .mark{color:var(--err)}.del .mark{color:var(--ok)}.same .mark{color:var(--warn)}
@@ -93,7 +93,7 @@ cursor:pointer;min-height:32px}
 .note{flex-basis:100%;order:3}
 table,thead,tbody,tr,td{display:block}thead{display:none}tr{border-bottom:1px solid var(--line);padding:6px 0}tbody tr:last-child{border-bottom:0}
 td{border:0;padding:4px 18px}td[data-col]:not(:first-child):before{content:attr(data-col);display:block;font-size:13px;color:var(--ink2)}
-.term pre{padding-right:16px;padding-top:52px}td code{white-space:normal}}
+.term pre{padding-right:16px;padding-top:52px}}
 @media print{@page{size:13.333in 7.5in;margin:.35in}html,body{background:#fff}main{max-width:none;padding:0;display:block;zoom:1.35}
 header{break-after:page}section{break-before:page;border:0}code{cursor:auto}.copy{display:none}.term pre{padding:14px 16px;white-space:pre-wrap}}
 """

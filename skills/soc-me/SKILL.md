@@ -52,24 +52,17 @@ Start with a one-line verdict (compromised / clean, plus the single biggest issu
 In the chat reply (not the HTML), say that nothing was modified.
 
 ## HTML report
-After the analysis, write the report as JSON and pipe it to the renderer. It prints the path of one self-contained page with no JS and no network requests, saved to `~/.local/state/soc-me/report-<time>.html`. On screen it is one readable page: title and host line, the verdict, then one section per panel. Light or dark follows the system. Printing gives a 16:9 landscape deck with one section per page. A click on a command selects all of it.
+After the analysis, write the report as JSON and pipe it to the renderer. It prints the path of one self-contained page saved to `~/.local/state/soc-me/report-<time>.html`: title and host line, the verdict, then one section per panel. It makes no network requests; the only script is the Copy button, allowed by its hash in the page's CSP. Light or dark follows the system. Printing gives a 16:9 landscape deck.
 
 ```sh
-python3 <skill-dir>/scripts/report.py <<'JSON'
-{"lang": "zh-Hant", "title": "SOC triage: myhost", "verdict": "clean",
- "summary": "Not compromised. Biggest issue: headless chromium PID 1353462 uses 974% CPU.",
- "meta": {"host": "myhost", "kernel": "6.x", "uptime": "2d 17h", "uid": "1000", "time": "2026-11-07 18:30"},
- "panels": [
-  {"title": "Clean checks", "tone": "ok", "items": ["ok No exe in /tmp or /dev/shm"]},
-  {"title": "Junk to clean", "note": "you run these", "cols": ["Target", "Cost", "Command"],
-   "rows": [["chromium (maze)", "974% CPU, 3.4 GB", "`kill 1353462`"], ["flatpak update", "running now", "no do not kill"]]}
- ]}
-JSON
+python3 <skill-dir>/scripts/report.py < report.json
 ```
+
+Before you write the JSON, read `<skill-dir>/references/example.json`. It is a complete report that uses every field: a suspicious table with ATT&CK IDs, junk with `copy`, odd-but-yours with severities, hardening `cards`, and passed checks. `references/example.html` is that report rendered. Copy its structure, not its content.
 
 - Each panel `note` says what the reader should do with it, not a vague label: "不是威脅，確認是你開的就好", not "請確認".
 - One panel per report section, in the order above. Put the thing (PID or target) in the first column. Leave out empty panels. Tones: `err` for suspicious, `warn` for odd but yours, `ok` for clean checks. Leave junk and hardening without a tone.
-- `verdict` is `clean`, `suspicious` or `compromised`. It sets the header color.
+- `verdict` is `clean`, `suspicious` or `compromised`. It sets the header color. The page shows the verdict as a label, so `summary` must not repeat it: start with the evidence.
 - In the "Junk to clean" panel, set `copy` to its commands, one per entry, in the order to run them. The section header gets a "copy all" button. Put only commands that are safe to run together; anything the user should decide first goes in "Odd but yours". Commands can also appear inline in any text as `` `kill 123` ``.
 - Severity: start a cell or item with `crit `, `high `, `med `, `low ` or `info ` to show a severity label. Give each Suspicious and Odd-but-yours row one, in its own column. In Suspicious, add an ATT&CK column with the technique ID from the red-flags table.
 - A cell or item that starts with `ok `, `no ` or `warn ` gets a ✓, ✗ or ! badge. A cell wrapped in backticks renders as code: use this for every command.
