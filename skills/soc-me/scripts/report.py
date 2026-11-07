@@ -226,12 +226,9 @@ def render(d):
 if __name__ == "__main__":
     out = sys.argv[2] if sys.argv[1:2] == ["-o"] else None
     if not out:
-        if os.name == "nt":
-            state = os.environ.get("LOCALAPPDATA") or os.path.expanduser("~")
-        else:
-            state = os.environ.get("XDG_STATE_HOME") or os.path.expanduser("~/.local/state")
-        os.makedirs(os.path.join(state, "soc-me"), exist_ok=True)
-        out = os.path.join(state, "soc-me", datetime.datetime.now().strftime("report-%Y%m%d-%H%M%S.html"))
+        home = os.path.join(os.path.expanduser("~"), ".soc-my-pc")  # same place on Linux and Windows
+        os.makedirs(home, exist_ok=True)
+        out = os.path.join(home, datetime.datetime.now().strftime("report-%Y%m%d-%H%M%S.html"))
     with open(out, "w", encoding="utf-8") as f:
         f.write(render(json.load(sys.stdin)))
     print(out)

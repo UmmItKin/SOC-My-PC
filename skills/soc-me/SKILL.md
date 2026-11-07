@@ -46,7 +46,7 @@ Start with a one-line verdict (compromised / suspicious / clean, plus the single
 In the chat reply (not the HTML), say that nothing was modified.
 
 ## HTML report
-After the analysis, write the report as JSON and pipe it to the renderer. It prints the path of one self-contained page: on Linux `~/.local/state/soc-me/report-<time>.html`, on Windows `%LOCALAPPDATA%\soc-me\report-<time>.html`. The page has the title and host line, the verdict, then one section per panel. It makes no network requests; the only script is the Copy button, allowed by its hash in the page's CSP. Light or dark follows the system. Printing gives a 16:9 landscape deck.
+After the analysis, write the report as JSON and pipe it to the renderer. It prints the path of one self-contained page, saved as `~/.soc-my-pc/report-<time>.html` (on Windows `%USERPROFILE%\.soc-my-pc\`). The page has the title and host line, the verdict, then one section per panel. It makes no network requests; the only script is the Copy button, allowed by its hash in the page's CSP. Light or dark follows the system. Printing gives a 16:9 landscape deck.
 
 ```sh
 python3 <skill-dir>/scripts/report.py < report.json      # Windows: py -3 or python

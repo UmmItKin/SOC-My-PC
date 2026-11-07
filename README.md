@@ -39,7 +39,7 @@ When something looks suspicious, the report adds the matching MITRE ATT&CK techn
 
 ## The report
 
-The agent writes the result to `~/.local/state/soc-me/` on Linux or `%LOCALAPPDATA%\soc-me\` on Windows, and gives you the link. The page has:
+The agent writes the result to `~/.soc-my-pc/report-<time>.html` (on Windows `%USERPROFILE%\.soc-my-pc\`) and gives you the link. The page has:
 
 - the verdict (clean, suspicious or compromised) with a one-line summary
 - what you can clean, with a button that copies all cleanup commands
