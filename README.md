@@ -37,62 +37,6 @@ The full lists, with what counts as a red flag, are in [`references/linux.md`](s
 
 When something looks suspicious, the report adds the matching MITRE ATT&CK technique ID, such as T1574.006 for `LD_PRELOAD` hijacking.
 
-## The report
-
-The agent writes the result to `~/.soc-my-pc/report-<time>.html` (on Windows `%USERPROFILE%\.soc-my-pc\`) and gives you the link. The page has:
-
-- the verdict (clean, suspicious or compromised) with a one-line summary
-- what you can clean, with a button that copies all cleanup commands
-- what looks odd but is probably yours
-- hardening suggestions, each with the risk explained and a command you can copy
-- the checks that passed
-
-Light or dark follows your system. Printing gives a 16:9 slide deck.
-
-To see one before you install, open [`skills/soc-me/references/example.html`](skills/soc-me/references/example.html) in a browser (download it; GitHub shows HTML as source). It is a made-up compromised machine, so every section appears.
-
-The page makes no network requests. Every value from the host is escaped, because process names and arguments can be attacker-controlled. The only script on the page is the copy button, and the page's Content Security Policy allows only that script.
-
-The agent never runs the cleanup commands. You read them and run them yourself.
-
-## Requirements
-
-- `python3` for the HTML report (on Windows, `py -3` or `python`)
-- No root or administrator needed. Without them, some details are hidden (socket owners on Linux; Defender exclusions and WMI subscriptions on Windows), and the report says so.
-
-**Linux:** `sh`, `ps`, `find`, and `ss` or `netstat`. Tested on Arch Linux. On Debian, Ubuntu, Fedora and similar systems the collector should work as is. On Alpine and other BusyBox systems, the CPU and memory rankings and the "recently changed" checks come out empty, because they need GNU `ps --sort` and `find -newermt`.
-
-**Windows:** Windows 10 or 11 with the built-in Windows PowerShell 5.1. The Windows collector is new: it parses and degrades cleanly under PowerShell 7 on Linux, but has not yet been run on a real Windows machine. Reports of problems are welcome.
-
-## Run without an agent
-
-```sh
-sh skills/soc-me/scripts/collect.sh [DAYS]   # Linux raw findings; DAYS = "recently changed" window, default 7
-sh skills/soc-me/scripts/smoke.sh            # self-test: collector sections, HTML escaping, CSP hash
-```
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File skills\soc-me\scripts\collect.ps1 [DAYS]   # Windows raw findings
-```
-
-## Layout
-
-```
-skills/soc-me/
-├── SKILL.md              shared rules; picks linux.md or windows.md
-├── agents/openai.yaml    Codex settings (explicit invocation only)
-├── references/
-│   ├── linux.md          Linux collector, follow-up checks, red flags, junk, hardening
-│   ├── windows.md        the same for Windows
-│   ├── example.json      a complete made-up report; the agent copies its structure
-│   └── example.html      the same report, rendered
-└── scripts/
-    ├── collect.sh        read-only Linux collector
-    ├── collect.ps1       read-only Windows collector
-    ├── report.py         JSON to HTML report
-    └── smoke.sh          self-test
-```
-
 ## License
 
 [MIT](LICENSE)
