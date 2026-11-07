@@ -24,13 +24,13 @@ sec exe-from-odd-path
 for p in /proc/[0-9]*; do
   e=$(readlink "$p/exe" 2>/dev/null) || continue
   case "$e" in *'(deleted)'*|/tmp/*|/dev/shm/*|/var/tmp/*|/run/user/*|*/.cache/*)
-    echo "${p#/proc/} $e :: $(tr '\0' ' ' < "$p/cmdline" | cut -c1-160)";; esac
+    echo "${p#/proc/} $e :: $({ tr '\0' ' ' < "$p/cmdline"; } 2>/dev/null | cut -c1-160)";; esac
 done
 
 sec fake-kernel-thread
 # real kthreads have no exe; a [bracketed] name WITH an exe is masquerading
 for p in /proc/[0-9]*; do
-  a=$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null)
+  a=$({ tr '\0' ' ' < "$p/cmdline"; } 2>/dev/null)  # a process can exit mid-scan
   case "$a" in '['*) readlink "$p/exe" >/dev/null 2>&1 && echo "${p#/proc/} $a -> $(readlink "$p/exe")";; esac
 done
 
